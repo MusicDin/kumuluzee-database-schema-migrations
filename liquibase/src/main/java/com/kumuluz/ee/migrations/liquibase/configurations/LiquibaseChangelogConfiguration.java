@@ -2,9 +2,9 @@ package com.kumuluz.ee.migrations.liquibase.configurations;
 
 import java.util.Optional;
 
-public class LiquibaseDatasourceConfiguration {
+public class LiquibaseChangelogConfiguration {
     public Optional<String> jndiName;
-    public Optional<String> changelog;
+    public Optional<String> file;
     public boolean startupDropAll;
     public boolean startupUpdate;
 

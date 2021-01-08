@@ -7,7 +7,7 @@ import com.kumuluz.ee.common.wrapper.KumuluzServerWrapper;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.kumuluz.ee.migrations.MigrationUtil;
 import com.kumuluz.ee.migrations.liquibase.configurations.KeeDatasourceConfiguration;
-import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseDatasourceConfiguration;
+import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseChangelogConfiguration;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseMigrationUtil;
 
@@ -18,11 +18,7 @@ import java.util.logging.Logger;
 @EeExtensionDef(name = "Liquibase", group = "migrations")
 public class LiquibaseExtension implements Extension {
 
-    private Logger LOG = Logger.getLogger(LiquibaseExtension.class.getName());
-
     public static final String MIGRATIONS_CONFIG_PREFIX  = "kumuluzee.migrations";
-    public static final String LIQUIBASE_CONFIG_PREFIX   = "kumuluzee.migrations.liquibase";
-    public static final String DATASOURCES_CONFIG_PREFIX = "kumuluzee.datasources";
 
     @Override
     public void load() {
@@ -34,39 +30,40 @@ public class LiquibaseExtension implements Extension {
 
         MigrationUtil migrationUtil = new LiquibaseMigrationUtil();
 
-        List<LiquibaseDatasourceConfiguration> liquibaseDatasources = LiquibaseConfigurationUtil.getLiquibaseDatasourceConfigurations();
+        List<LiquibaseChangelogConfiguration> liquibaseChangelogs = LiquibaseConfigurationUtil.getLiquibaseChangelogConfigurations();
 
         // Exit if no datasource is provided
-        if(liquibaseDatasources.isEmpty()) {
+        if(liquibaseChangelogs.isEmpty()) {
             return;
         }
 
-        for(LiquibaseDatasourceConfiguration liquibaseDS : liquibaseDatasources) {
+        for(LiquibaseChangelogConfiguration liquibaseChangelog : liquibaseChangelogs) {
 
-            if(liquibaseDS.jndiName.isEmpty() || liquibaseDS.changelog.isEmpty()) {
+            if(liquibaseChangelog.jndiName.isEmpty() || liquibaseChangelog.file.isEmpty()) {
                 continue;
             }
 
-            Optional<KeeDatasourceConfiguration> keeDS = LiquibaseConfigurationUtil.getDatasourceConfiguration(liquibaseDS.jndiName.get());
+            Optional<KeeDatasourceConfiguration> keeDS = LiquibaseConfigurationUtil.getDatasourceConfiguration(liquibaseChangelog.jndiName.get());
             if(keeDS.isPresent()){
 
                 // startup dropAll
-                if(liquibaseDS.startupDropAll) {
+                if(liquibaseChangelog.startupDropAll) {
                     migrationUtil.dropAll(
                             keeDS.get().connectionUrl,
                             keeDS.get().username,
                             keeDS.get().password,
-                            liquibaseDS.changelog.get());
+                            liquibaseChangelog.file.get());
                 }
 
                 // startup update
-                if(liquibaseDS.startupUpdate) {
+                if(liquibaseChangelog.startupUpdate) {
                     migrationUtil.update(
                             keeDS.get().connectionUrl,
                             keeDS.get().username,
                             keeDS.get().password,
-                            liquibaseDS.changelog.get());
+                            liquibaseChangelog.file.get());
                 }
+
             }
         }
 
@@ -74,7 +71,7 @@ public class LiquibaseExtension implements Extension {
 
     @Override
     public boolean isEnabled() {
-        return ConfigurationUtil.getInstance().getBoolean(MIGRATIONS_CONFIG_PREFIX + "." + "enabled").orElse(true);
+        return ConfigurationUtil.getInstance().getBoolean(MIGRATIONS_CONFIG_PREFIX + ".enabled").orElse(true);
     }
 
 }

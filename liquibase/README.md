@@ -13,10 +13,10 @@ kumuluzee:
   migrations:
     enabled: true
     liquibase:
-      datasources:
-        - jndi-name: jdbc/example-db
-          changelog: db/db.changelog-master.xml
+      changelogs:
+        - file: db/db.changelog-master.xml
+          jndi-name: jdbc/example-db
           startup:
-            dropAll: false
+            drop-all: false
             update: true
 ```
