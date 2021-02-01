@@ -3,20 +3,59 @@
 Example KumuluzEE configuration in `config.yaml`:
 ```yaml
 kumuluzee:
+  # Datasource configurations
   datasources:
-    - jndi-name: jdbc/example-db
-      connection-url: jdbc:postgresql://localhost:5432/example
+    - jndi-name: jdbc/example-db-1
+      connection-url: jdbc:postgresql://localhost:5432/example1
       username: postgres
       password: postgres
       pool:
         max-size: 20
+    - jndi-name: jdbc/example-db-2
+      connection-url: jdbc:postgresql://localhost:5433/example2
+      username: postgres
+      password: postgres
+      pool:
+        max-size: 20
+  # Liquibase configurations 
   migrations:
-    enabled: true
+    enabled: true                             # default: true
     liquibase:
       changelogs:
-        - file: db/db.changelog-master.xml
-          jndi-name: jdbc/example-db
+          # Note: Liquibase "jndi-name" has to match with datasource's jndi-name
+        - jndi-name: jdbc/example-db-1
+          file: db/db.changelog-master-1.xml  # default: "db/changelog-master.xml"
+        - jndi-name: jdbc/example-db-2
           startup:
-            drop-all: false
-            update: true
+            drop-all: false                   # default: false  
+            update: true                      # default: false
+```
+
+Example of `LiquibaseContainer` injection:
+```java
+
+// Injects with first liquibase configuration
+@Inject
+private LiquibaseContainer firstLiquibaseConfigContainer;
+
+// Injects with first liquibase configuration
+@Inject
+@LiquibaseChangelog
+private LiquibaseContainer alsoFirstLiquibaseConfigContainer;
+
+// Injects container from configuration with provided jndi name
+@Inject
+@LiquibaseChangelog(jndiName = "jdbc/sequence-email-db")
+private LiquibaseContainer liquibaseContainer;
+
+public void dropAll(){
+    Liquibase liquibase = liquibaseContainer.createLiquibase();
+    try {
+        liquibase.dropAll();
+        liquibase.validate();
+        liquibase.getDatabase().getConnection().close();
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+}
 ```
