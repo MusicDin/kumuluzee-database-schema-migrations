@@ -45,7 +45,7 @@ private LiquibaseContainer alsoFirstLiquibaseConfigContainer;
 
 // Injects container from configuration with provided jndi name
 @Inject
-@LiquibaseChangelog(jndiName = "jdbc/sequence-email-db")
+@LiquibaseChangelog(jndiName = "jdbc/example-db-2")
 private LiquibaseContainer liquibaseContainer;
 
 public void dropAll(){
