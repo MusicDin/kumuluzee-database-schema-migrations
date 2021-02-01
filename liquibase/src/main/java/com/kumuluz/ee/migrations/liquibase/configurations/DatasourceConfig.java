@@ -1,6 +1,6 @@
 package com.kumuluz.ee.migrations.liquibase.configurations;
 
-public class KeeDatasourceConfiguration {
+public class DatasourceConfig {
 
     public String jndiName;
     public String connectionUrl;

@@ -1,8 +1,8 @@
 package com.kumuluz.ee.migrations.liquibase.utils;
 
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
-import com.kumuluz.ee.migrations.liquibase.configurations.KeeDatasourceConfiguration;
-import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseChangelogConfiguration;
+import com.kumuluz.ee.migrations.liquibase.configurations.DatasourceConfig;
+import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,64 @@ public class LiquibaseConfigurationUtil {
 
     public static final String LIQUIBASE_CHANGELOGS_CONFIG_PREFIX = "kumuluzee.migrations.liquibase.changelogs";
     public static final String DATASOURCES_CONFIG_PREFIX = "kumuluzee.datasources";
+    public static final String DEFAULT_MASTER_CHANGELOG = "db/changelog-master.xml";
 
-    public static Optional<KeeDatasourceConfiguration> getDatasourceConfiguration(String datasourceJndiName){
+    public static List<LiquibaseConfig> getLiquibaseConfigs() {
+
+        List<LiquibaseConfig> liquibaseConfigs = new ArrayList<>();
+
+        final ConfigurationUtil config = ConfigurationUtil.getInstance();
+        int changelogCount = config.getListSize(LIQUIBASE_CHANGELOGS_CONFIG_PREFIX).orElse(0);
+
+        for (int i = 0; i < changelogCount; i++) {
+            Optional<LiquibaseConfig> liquibaseConfig = getLiquibaseConfig(i);
+            liquibaseConfig.ifPresent(liquibaseConfigs::add);
+        }
+
+        return liquibaseConfigs;
+    }
+
+    public static Optional<LiquibaseConfig> getLiquibaseConfig(int index) {
+
+        final ConfigurationUtil config = ConfigurationUtil.getInstance();
+        Optional<String> jndiName = config.get(LIQUIBASE_CHANGELOGS_CONFIG_PREFIX + "[" + index + "]" + ".jndi-name");
+
+        if (jndiName.isPresent()) {
+            return getLiquibaseConfig(jndiName.get());
+        }
+
+        return Optional.empty();
+    }
+
+    public static Optional<LiquibaseConfig> getLiquibaseConfig(String liquibaseJndiName) {
+
+        final ConfigurationUtil config = ConfigurationUtil.getInstance();
+        int changelogCount = config.getListSize(LIQUIBASE_CHANGELOGS_CONFIG_PREFIX).orElse(0);
+
+        for (int i = 0; i < changelogCount; i++) {
+
+            String changelogPrefix = LIQUIBASE_CHANGELOGS_CONFIG_PREFIX + "[" + i + "]";
+            Optional<String> jndiName = config.get(changelogPrefix + ".jndi-name");
+
+            if (jndiName.isEmpty() || !jndiName.get().equals(liquibaseJndiName)) {
+                continue;
+            }
+
+            LiquibaseConfig changelogConfig = new LiquibaseConfig();
+            changelogConfig.jndiName = jndiName.get();
+            changelogConfig.file = config.get(changelogPrefix + ".file").orElse(DEFAULT_MASTER_CHANGELOG);
+            changelogConfig.startupDropAll = config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false);
+            changelogConfig.startupUpdate = config.getBoolean(changelogPrefix + ".startup.update").orElse(false);
+            return Optional.of(changelogConfig);
+        }
+
+        return Optional.empty();
+    }
+
+    public static Optional<DatasourceConfig> getDatasourceConfig(String datasourceJndiName) {
+
+        if (datasourceJndiName == null || datasourceJndiName.isEmpty())
+            return Optional.empty();
 
         final ConfigurationUtil config = ConfigurationUtil.getInstance();
         int datasourcesCount = config.getListSize(DATASOURCES_CONFIG_PREFIX).orElse(0);
@@ -26,18 +82,18 @@ public class LiquibaseConfigurationUtil {
             String dsPrefix = DATASOURCES_CONFIG_PREFIX + "[" + i + "]";
             Optional<String> jndiName = config.get(dsPrefix + ".jndi-name");
 
-            if(jndiName.isPresent() && jndiName.get().equals(datasourceJndiName)) {
+            if (jndiName.isPresent() && jndiName.get().equals(datasourceJndiName)) {
 
                 Optional<String> url = config.get(dsPrefix + ".connection-url");
                 Optional<String> username = config.get(dsPrefix + ".username");
                 Optional<String> password = config.get(dsPrefix + ".password");
 
-                if(url.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                if (url.isEmpty() || username.isEmpty() || password.isEmpty()) {
                     LOG.severe("Datasource with provided jndi name is not configured properly.");
                     return Optional.empty();
                 }
 
-                KeeDatasourceConfiguration dsConfig = new KeeDatasourceConfiguration();
+                DatasourceConfig dsConfig = new DatasourceConfig();
                 dsConfig.jndiName = jndiName.get();
                 dsConfig.username = username.get();
                 dsConfig.password = password.get();
@@ -50,34 +106,5 @@ public class LiquibaseConfigurationUtil {
         return Optional.empty();
     }
 
-    public static List<LiquibaseChangelogConfiguration> getLiquibaseChangelogConfigurations(){
-
-        final ConfigurationUtil config = ConfigurationUtil.getInstance();
-        int changelogCount = config.getListSize(LIQUIBASE_CHANGELOGS_CONFIG_PREFIX).orElse(0);
-
-        List<LiquibaseChangelogConfiguration> changelogConfigs = new ArrayList<>();
-
-        for (int i = 0; i < changelogCount; i++) {
-
-            String changelogPrefix = LIQUIBASE_CHANGELOGS_CONFIG_PREFIX + "[" + i + "]";
-            Optional<String> jndiName = config.get(changelogPrefix + ".jndi-name");
-
-            if(jndiName.isPresent()) {
-
-                LiquibaseChangelogConfiguration changelogConfig = new LiquibaseChangelogConfiguration();
-                changelogConfig.jndiName = jndiName;
-                changelogConfig.file = config.get(changelogPrefix + ".file");
-                changelogConfig.startupDropAll = config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false);
-                changelogConfig.startupUpdate = config.getBoolean(changelogPrefix + ".startup.update").orElse(false);
-                changelogConfigs.add(changelogConfig);
-
-            } else {
-
-                // TODO: Add option to directly provide connection-url, username and password
-            }
-        }
-
-        return changelogConfigs;
-    }
 
 }
