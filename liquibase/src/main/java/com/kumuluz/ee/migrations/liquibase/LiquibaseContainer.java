@@ -1,5 +1,6 @@
 package com.kumuluz.ee.migrations.liquibase;
 
+import com.kumuluz.ee.common.config.EeConfig;
 import com.kumuluz.ee.migrations.liquibase.configurations.DatasourceConfig;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
@@ -27,17 +28,20 @@ public class LiquibaseContainer {
 
         LiquibaseConfig liquibaseConfig;
 
-        // If jndiName is not defined, return first configuration
-        if (jndiName == null || jndiName.isEmpty()) {
+        // If jndiName is not defined, return first configuration if only 1 datasource is specified
+        if ((jndiName == null || jndiName.isEmpty()) && EeConfig.getInstance().getDatasources().size() == 1) {
+
             liquibaseConfig = LiquibaseConfigurationUtil
                     .getLiquibaseConfig(0)
                     .orElseThrow(() -> new RuntimeException("Liquibase configuration not found"));
 
         } else {
+
             liquibaseConfig = LiquibaseConfigurationUtil
                     .getLiquibaseConfig(jndiName)
                     .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '" + jndiName + "' not found"));
         }
+
 
         DatasourceConfig datasourceConfig = LiquibaseConfigurationUtil
                 .getDatasourceConfig(liquibaseConfig.getJndiName())
