@@ -25,7 +25,6 @@ kumuluzee:
           # Note: Liquibase "jndi-name" has to match with datasource's jndi-name
         - jndi-name: jdbc/example-db-1
           file: db/db.changelog-master-1.xml  # default: "db/changelog-master.xml"
-        - jndi-name: jdbc/example-db-2
           startup:
             drop-all: false                   # default: false  
             update: true                      # default: false
@@ -34,18 +33,18 @@ kumuluzee:
 Example of `LiquibaseContainer` injection:
 ```java
 
-// Injects with first liquibase configuration
+// Injects liquibase configuration if only 1 liquibase configuration is provided 
 @Inject
 private LiquibaseContainer firstLiquibaseConfigContainer;
 
-// Injects with first liquibase configuration
+// Injects liquibase configuration if only 1 liquibase configuration is provided
 @Inject
 @LiquibaseChangelog
 private LiquibaseContainer alsoFirstLiquibaseConfigContainer;
 
 // Injects container from configuration with provided jndi name
 @Inject
-@LiquibaseChangelog(jndiName = "jdbc/example-db-2")
+@LiquibaseChangelog(jndiName = "jdbc/example-db-1")
 private LiquibaseContainer liquibaseContainer;
 
 public void dropAll(){
