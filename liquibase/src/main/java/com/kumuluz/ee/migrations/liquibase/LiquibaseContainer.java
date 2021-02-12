@@ -40,8 +40,8 @@ public class LiquibaseContainer {
         }
 
         DatasourceConfig datasourceConfig = LiquibaseConfigurationUtil
-                .getDatasourceConfig(liquibaseConfig.jndiName)
-                .orElseThrow(() -> new RuntimeException("Datasource configuration with jndi name '" + liquibaseConfig.jndiName + "' not found"));
+                .getDatasourceConfig(liquibaseConfig.getJndiName())
+                .orElseThrow(() -> new RuntimeException("Datasource configuration with jndi name '" + liquibaseConfig.getJndiName() + "' not found"));
 
         try {
             Connection connection = DriverManager.getConnection(
@@ -52,7 +52,7 @@ public class LiquibaseContainer {
             ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor(Thread.currentThread().getContextClassLoader());
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
 
-            return new Liquibase(liquibaseConfig.file, resourceAccessor, database);
+            return new Liquibase(liquibaseConfig.getFile(), resourceAccessor, database);
 
         } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);

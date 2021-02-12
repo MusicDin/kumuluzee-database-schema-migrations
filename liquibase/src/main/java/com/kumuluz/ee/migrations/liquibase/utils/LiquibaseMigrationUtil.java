@@ -24,18 +24,18 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
 
         for (LiquibaseConfig liquibaseConfig : liquibaseConfigs) {
 
-            LiquibaseContainer liquibaseContainer = new LiquibaseContainer(liquibaseConfig.jndiName);
+            LiquibaseContainer liquibaseContainer = new LiquibaseContainer(liquibaseConfig.getJndiName());
             Liquibase liquibase = liquibaseContainer.createLiquibase();
 
             try {
                 // startup dropAll
-                if (liquibaseConfig.startupDropAll) {
+                if (liquibaseConfig.isStartupDropAll()) {
                     liquibase.dropAll();
                     liquibase.validate();
                 }
 
                 // startup update
-                if (liquibaseConfig.startupUpdate) {
+                if (liquibaseConfig.isStartupUpdate()) {
                     liquibase.update(new Contexts(), new LabelExpression());
                     liquibase.validate();
                 }

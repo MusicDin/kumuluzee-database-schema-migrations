@@ -59,10 +59,10 @@ public class LiquibaseConfigurationUtil {
             }
 
             LiquibaseConfig changelogConfig = new LiquibaseConfig();
-            changelogConfig.jndiName = jndiName.get();
-            changelogConfig.file = config.get(changelogPrefix + ".file").orElse(DEFAULT_MASTER_CHANGELOG);
-            changelogConfig.startupDropAll = config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false);
-            changelogConfig.startupUpdate = config.getBoolean(changelogPrefix + ".startup.update").orElse(false);
+            changelogConfig.setJndiName(jndiName.get());
+            changelogConfig.setFile(config.get(changelogPrefix + ".file").orElse(DEFAULT_MASTER_CHANGELOG));
+            changelogConfig.setStartupDropAll(config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false));
+            changelogConfig.setStartupUpdate(config.getBoolean(changelogPrefix + ".startup.update").orElse(false));
             return Optional.of(changelogConfig);
         }
 
