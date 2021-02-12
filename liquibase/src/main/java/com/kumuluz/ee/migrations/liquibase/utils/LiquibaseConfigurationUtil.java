@@ -9,12 +9,25 @@ import java.util.Optional;
 
 public class LiquibaseConfigurationUtil {
 
-    public static final String LIQUIBASE_CHANGELOGS_CONFIG_PREFIX = "kumuluzee.migrations.liquibase.changelogs";
-    public static final String DEFAULT_MASTER_CHANGELOG = "db/changelog-master.xml";
+    private static final String LIQUIBASE_CHANGELOGS_CONFIG_PREFIX = "kumuluzee.migrations.liquibase.changelogs";
+    private static final String DEFAULT_MASTER_CHANGELOG = "db/changelog-master.xml";
+    private static LiquibaseConfigurationUtil instance;
+    private List<LiquibaseConfig> liquibaseConfigs;
 
-    public static List<LiquibaseConfig> getLiquibaseConfigs() {
+    public static LiquibaseConfigurationUtil getInstance(){
+        if(instance == null) {
+            instance = new LiquibaseConfigurationUtil();
+        }
+        return instance;
+    }
 
-        List<LiquibaseConfig> liquibaseConfigs= new ArrayList<>();
+    private LiquibaseConfigurationUtil() {
+        readConfigs();
+    }
+
+    private void readConfigs(){
+
+        liquibaseConfigs = new ArrayList<>();
 
         final ConfigurationUtil config = ConfigurationUtil.getInstance();
         int changelogCount = config.getListSize(LIQUIBASE_CHANGELOGS_CONFIG_PREFIX).orElse(0);
@@ -33,7 +46,9 @@ public class LiquibaseConfigurationUtil {
                 liquibaseConfigs.add(liquibaseConfig);
             }
         }
+    }
 
+    public List<LiquibaseConfig> getLiquibaseConfigs() {
         return liquibaseConfigs;
     }
 

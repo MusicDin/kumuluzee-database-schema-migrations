@@ -20,7 +20,7 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
     @Override
     public void migrate() {
 
-        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getLiquibaseConfigs();
+        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
 
         for (LiquibaseConfig liquibaseConfig : liquibaseConfigs) {
 
