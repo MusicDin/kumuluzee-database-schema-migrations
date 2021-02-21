@@ -14,9 +14,15 @@ public class LiquibaseConfigurationUtil {
     private static LiquibaseConfigurationUtil instance;
     private List<LiquibaseConfig> liquibaseConfigs;
 
-    public static LiquibaseConfigurationUtil getInstance(){
+    private static synchronized void init(){
         if(instance == null) {
             instance = new LiquibaseConfigurationUtil();
+        }
+    }
+
+    public static LiquibaseConfigurationUtil getInstance(){
+        if(instance == null) {
+            init();
         }
         return instance;
     }
