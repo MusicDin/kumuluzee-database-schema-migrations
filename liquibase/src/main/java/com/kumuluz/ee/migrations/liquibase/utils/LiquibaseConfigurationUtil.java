@@ -4,6 +4,7 @@ import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,8 @@ public class LiquibaseConfigurationUtil {
                 LiquibaseConfig liquibaseConfig = new LiquibaseConfig();
                 liquibaseConfig.setJndiName(jndiName.get());
                 liquibaseConfig.setFile(config.get(changelogPrefix + ".file").orElse(DEFAULT_MASTER_CHANGELOG));
+                liquibaseConfig.setContexts(Arrays.asList(config.get(changelogPrefix + ".contexts").orElse("").split(",").clone()));
+                liquibaseConfig.setLabels(Arrays.asList(config.get(changelogPrefix + ".labels").orElse("").split(",").clone()));
                 liquibaseConfig.setStartupDropAll(config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false));
                 liquibaseConfig.setStartupUpdate(config.getBoolean(changelogPrefix + ".startup.update").orElse(false));
                 liquibaseConfigs.add(liquibaseConfig);

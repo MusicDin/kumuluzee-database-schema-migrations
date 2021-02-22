@@ -1,11 +1,15 @@
 package com.kumuluz.ee.migrations.liquibase.configurations;
 
+import java.util.List;
+
 public class LiquibaseConfig {
 
     private String jndiName;
     private String file;
     private boolean startupDropAll;
     private boolean startupUpdate;
+    private List<String> contexts;
+    private List<String> labels;
 
     public String getJndiName() {
         return jndiName;
@@ -37,5 +41,21 @@ public class LiquibaseConfig {
 
     public void setStartupUpdate(boolean startupUpdate) {
         this.startupUpdate = startupUpdate;
+    }
+
+    public List<String> getContexts() {
+        return contexts;
+    }
+
+    public void setContexts(List<String> contexts) {
+        this.contexts = contexts;
+    }
+
+    public List<String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
     }
 }

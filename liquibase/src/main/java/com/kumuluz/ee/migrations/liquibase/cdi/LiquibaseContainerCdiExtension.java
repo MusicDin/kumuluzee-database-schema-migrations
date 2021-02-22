@@ -34,9 +34,10 @@ public class LiquibaseContainerCdiExtension implements Extension {
                             "' annotated with @LiquibaseChangelog has an empty jndiName, but there are " +
                             "multiple configurations provided."));
                 }
-
             }
+
         }
 
     }
+
 }
