@@ -22,9 +22,10 @@ kumuluzee:
     enabled: true                             # default: true
     liquibase:
       changelogs:
-          # Note: Liquibase "jndi-name" has to match with datasource's jndi-name
-        - jndi-name: jdbc/example-db-1
+        - jndi-name: jdbc/example-db-1        # required, has to match with datasource's jndi-name
           file: db/db.changelog-master-1.xml  # default: "db/changelog-master.xml"
+          contexts: context1, context2        # default: ""
+          labels: label1 and label2, label3   # default: "" ("," (comma) is same as "or")
           startup:
             drop-all: false                   # default: false  
             update: true                      # default: false
@@ -33,16 +34,12 @@ kumuluzee:
 Example of `LiquibaseContainer` injection:
 ```java
 
-// Injects liquibase configuration if only 1 liquibase configuration is provided 
-@Inject
-private LiquibaseContainer firstLiquibaseConfigContainer;
-
-// Injects liquibase configuration if only 1 liquibase configuration is provided
+// Injects liquibase container if only 1 liquibase configuration is provided in config file
 @Inject
 @LiquibaseChangelog
 private LiquibaseContainer alsoFirstLiquibaseConfigContainer;
 
-// Injects container from configuration with provided jndi name
+// Injects liquibase container from configuration with provided jndi name
 @Inject
 @LiquibaseChangelog(jndiName = "jdbc/example-db-1")
 private LiquibaseContainer liquibaseContainer;
