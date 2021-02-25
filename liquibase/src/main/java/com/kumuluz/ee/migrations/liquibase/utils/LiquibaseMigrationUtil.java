@@ -37,8 +37,6 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
                 // startup update
                 if (liquibaseConfig.isStartupUpdate()) {
 
-                    // TODO: isSafeToRunUpdate()
-
                     Contexts contexts = new Contexts(liquibaseConfig.getContexts());
                     LabelExpression labelExpressions = new LabelExpression(liquibaseConfig.getLabels());
 

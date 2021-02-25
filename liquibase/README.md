@@ -36,6 +36,10 @@ Example of `LiquibaseContainer` injection:
 
 // Injects liquibase container if only 1 liquibase configuration is provided in config file
 @Inject
+private LiquibaseContainer firstLiquibaseConfigContainer;
+
+// Also injects liquibase container if only 1 liquibase configuration is provided in config file
+@Inject
 @LiquibaseChangelog
 private LiquibaseContainer alsoFirstLiquibaseConfigContainer;
 
