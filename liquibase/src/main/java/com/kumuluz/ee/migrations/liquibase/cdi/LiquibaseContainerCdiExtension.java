@@ -19,7 +19,7 @@ public class LiquibaseContainerCdiExtension implements Extension {
             final LiquibaseConfigurationUtil configurationUtil = LiquibaseConfigurationUtil.getInstance();
 
             // In order to Inject Liquibase container, at least one liquibase configuration needs to be provided
-            if(configurationUtil.getLiquibaseConfigs().size() == 0) {
+            if (configurationUtil.getLiquibaseConfigs().size() == 0) {
                 pip.addDefinitionError(new DeploymentException("Liquibase configuration needs to be provided in KumuluzEE config."));
                 return;
             }

@@ -15,14 +15,14 @@ public class LiquibaseConfigurationUtil {
     private static LiquibaseConfigurationUtil instance;
     private List<LiquibaseConfig> liquibaseConfigs;
 
-    private static synchronized void init(){
-        if(instance == null) {
+    private static synchronized void init() {
+        if (instance == null) {
             instance = new LiquibaseConfigurationUtil();
         }
     }
 
-    public static LiquibaseConfigurationUtil getInstance(){
-        if(instance == null) {
+    public static LiquibaseConfigurationUtil getInstance() {
+        if (instance == null) {
             init();
         }
         return instance;
@@ -32,7 +32,7 @@ public class LiquibaseConfigurationUtil {
         readConfigs();
     }
 
-    private void readConfigs(){
+    private void readConfigs() {
 
         liquibaseConfigs = new ArrayList<>();
 

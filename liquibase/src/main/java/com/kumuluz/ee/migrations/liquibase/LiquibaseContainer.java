@@ -22,20 +22,20 @@ public class LiquibaseContainer {
     private DataSourceConfig dataSourceConfig;
     private LiquibaseConfig liquibaseConfig;
 
-    public LiquibaseContainer(String jndiName){
+    public LiquibaseContainer(String jndiName) {
         prepareConfigs(jndiName);
     }
 
-    public void prepareConfigs(String jndiName){
+    public void prepareConfigs(String jndiName) {
 
         List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
         List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
 
-        if(liquibaseConfigs.size() == 0) {
+        if (liquibaseConfigs.size() == 0) {
             throw new RuntimeException("No liquibase configurations provided!");
         }
 
-        if(dataSourceConfigs.size() == 0) {
+        if (dataSourceConfigs.size() == 0) {
             throw new RuntimeException("No datasource configuration provided!");
         }
 
@@ -43,7 +43,7 @@ public class LiquibaseContainer {
             // If jndiName is not defined and only 1 liquibase configuration is provided,
             // return LiquibaseContainer for that configuration
 
-            if(liquibaseConfigs.size() == 1) {
+            if (liquibaseConfigs.size() == 1) {
                 liquibaseConfig = liquibaseConfigs.get(0);
             } else {
                 throw new RuntimeException("There is more than 1 liquibase configuration provided." +
