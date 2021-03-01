@@ -1,1 +1,1 @@
-com.kumuluz.ee.migrations.liquibase.cdi.LiquibaseContainerCdiExtension
+com.kumuluz.ee.migrations.liquibase.cdi.LiquibaseCdiExtension
