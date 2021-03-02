@@ -19,55 +19,19 @@ import java.util.List;
 
 public class LiquibaseContainer {
 
+    private final String jndiName;
     private DataSourceConfig dataSourceConfig;
     private LiquibaseConfig liquibaseConfig;
 
     public LiquibaseContainer(String jndiName) {
-        prepareConfigs(jndiName);
-    }
-
-    public void prepareConfigs(String jndiName) {
-
-        List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
-        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
-
-        if (liquibaseConfigs.size() == 0) {
-            throw new RuntimeException("No liquibase configurations provided!");
-        }
-
-        if (dataSourceConfigs.size() == 0) {
-            throw new RuntimeException("No datasource configuration provided!");
-        }
-
-        if (jndiName == null || jndiName.equals("")) {
-            // If jndiName is not defined and only 1 liquibase configuration is provided,
-            // return LiquibaseContainer for that configuration
-
-            if (liquibaseConfigs.size() == 1) {
-                liquibaseConfig = liquibaseConfigs.get(0);
-            } else {
-                throw new RuntimeException("There is more than 1 liquibase configuration provided." +
-                        " Please provide 'jndiName' of liquibase datasource trough '@LiquibaseChangelog' annotation.");
-            }
-
-        } else {
-            liquibaseConfig = liquibaseConfigs
-                    .stream()
-                    .filter(config -> config.getJndiName().equals(jndiName))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '"
-                            + jndiName + "' not found"));
-        }
-
-        dataSourceConfig = dataSourceConfigs
-                .stream()
-                .filter(ds -> ds.getJndiName().equals(liquibaseConfig.getJndiName()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Datasource configuration with jndi name '"
-                        + liquibaseConfig.getJndiName() + "' not found"));
+        this.jndiName = jndiName;
     }
 
     public Liquibase createLiquibase() {
+
+        if (dataSourceConfig == null || liquibaseConfig == null) {
+            prepareConfigs();
+        }
 
         try {
             Connection connection = DriverManager.getConnection(
@@ -83,6 +47,49 @@ public class LiquibaseContainer {
         } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void prepareConfigs() {
+
+        List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
+        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
+
+        if (liquibaseConfigs.size() == 0) {
+            throw new RuntimeException("No liquibase configurations provided!");
+        }
+
+        if (dataSourceConfigs.size() == 0) {
+            throw new RuntimeException("No datasource configuration provided!");
+        }
+
+        if (jndiName == null || jndiName.equals("")) {
+
+            // If jndiName is not defined and only 1 liquibase configuration is provided,
+            // return LiquibaseContainer for that configuration
+
+            if (liquibaseConfigs.size() == 1) {
+                liquibaseConfig = liquibaseConfigs.get(0);
+            } else {
+                throw new RuntimeException("There is more than 1 liquibase configuration provided." +
+                        " Please provide 'jndiName' of liquibase datasource trough '@LiquibaseChangelog' annotation.");
+            }
+
+        } else {
+
+            liquibaseConfig = liquibaseConfigs
+                    .stream()
+                    .filter(config -> config.getJndiName().equals(jndiName))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '"
+                            + jndiName + "' not found"));
+        }
+
+        dataSourceConfig = dataSourceConfigs
+                .stream()
+                .filter(ds -> ds.getJndiName().equals(liquibaseConfig.getJndiName()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '"
+                        + liquibaseConfig.getJndiName() + "' does not match any data source's jndi name."));
     }
 
 }

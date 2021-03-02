@@ -7,19 +7,20 @@ import com.kumuluz.ee.common.wrapper.KumuluzServerWrapper;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import com.kumuluz.ee.migrations.MigrationUtil;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseMigrationUtil;
+import com.kumuluz.ee.migrations.liquibase.utils.ValidationUtil;
 
 @EeExtensionDef(name = "Liquibase", group = "migrations")
 public class LiquibaseExtension implements Extension {
 
     @Override
     public void init(KumuluzServerWrapper kumuluzServerWrapper, EeConfig eeConfig) {
-        MigrationUtil migrationUtil = new LiquibaseMigrationUtil();
-        migrationUtil.migrate();
+        ValidationUtil.validateConfigurations();
     }
 
     @Override
     public void load() {
-        // No actions to be done on load
+        MigrationUtil migrationUtil = new LiquibaseMigrationUtil();
+        migrationUtil.migrate();
     }
 
     @Override

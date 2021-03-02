@@ -1,34 +1,16 @@
 package com.kumuluz.ee.migrations.liquibase.cdi;
 
-import com.kumuluz.ee.common.config.DataSourceConfig;
-import com.kumuluz.ee.common.config.EeConfig;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
-import com.kumuluz.ee.migrations.liquibase.LiquibaseExtension;
 import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessInjectionPoint;
-import java.util.List;
 
 public class LiquibaseCdiExtension implements Extension {
-
-    public void validateConfigurations(@Observes BeforeBeanDiscovery event) {
-
-        List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
-        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
-
-        liquibaseConfigs.forEach(config -> dataSourceConfigs.stream()
-                .filter(ds -> ds.getJndiName().equals(config.getJndiName()))
-                .findFirst()
-                .orElseThrow(() -> new DeploymentException("Liquibase configuration with jndi name '"
-                        + config.getJndiName() + "' does not match any data source's jndi name."))
-        );
-    }
 
     public void validateInjectionPoints(@Observes ProcessInjectionPoint<?, ?> pip) {
 

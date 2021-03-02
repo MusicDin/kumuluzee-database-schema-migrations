@@ -15,8 +15,6 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
         super();
     }
 
-    // TODO: Add support for FileSystemResourceAccessor if data is not accessible via ClassLoaderResourceAccessor
-
     @Override
     public void migrate() {
 
