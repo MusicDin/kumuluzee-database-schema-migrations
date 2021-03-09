@@ -29,7 +29,6 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
                 // startup dropAll
                 if (liquibaseConfig.isStartupDropAll()) {
                     liquibase.dropAll();
-                    liquibase.validate();
                 }
 
                 // startup update
