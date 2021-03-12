@@ -2,6 +2,12 @@ package com.kumuluz.ee.migrations.liquibase.configurations;
 
 import java.util.List;
 
+/**
+ * Liquibase configuration.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 public class LiquibaseConfig {
 
     private String jndiName;

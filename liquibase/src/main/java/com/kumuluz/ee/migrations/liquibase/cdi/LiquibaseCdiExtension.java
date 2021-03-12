@@ -1,17 +1,32 @@
 package com.kumuluz.ee.migrations.liquibase.cdi;
 
+import com.kumuluz.ee.common.config.DataSourceConfig;
+import com.kumuluz.ee.common.config.EeConfig;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
 import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessInjectionPoint;
+import java.util.List;
 
+/**
+ * Validates injection points and Liquibase configuration.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 public class LiquibaseCdiExtension implements Extension {
 
+    /**
+     * Validates every LiquibaseContainer injection.
+     *
+     * @param pip - Observed ProcessInjectionPoint event
+     */
     public void validateInjectionPoints(@Observes ProcessInjectionPoint<?, ?> pip) {
 
         if (pip.getInjectionPoint().getBean().getBeanClass() == LiquibaseContainerProducer.class) {
@@ -47,6 +62,30 @@ public class LiquibaseCdiExtension implements Extension {
 
                 pip.addDefinitionError(new DeploymentException("No liquibase configurations has been found for jndi name '"
                         + liquibaseChangelog.jndiName() + "'."));
+            }
+        }
+    }
+
+    /**
+     * Validates that each Liquibase configuration is referencing a configured data source.
+     *
+     * @param event - Observed AfterBeanDiscovery event
+     */
+    public void validateConfigurations(@Observes AfterBeanDiscovery event) {
+
+        List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
+        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
+
+        for (LiquibaseConfig config : liquibaseConfigs) {
+
+            DataSourceConfig dataSourceConfig = dataSourceConfigs.stream()
+                    .filter(ds -> ds.getJndiName().equals(config.getJndiName()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (dataSourceConfig == null) {
+                event.addDefinitionError(new DeploymentException("Liquibase configuration with jndi name '" + config.getJndiName()
+                        + "' does not match any data source's jndi name."));
             }
         }
     }

@@ -17,6 +17,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Liquibase container initializes Liquibase object based on provided JNDI name.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 public class LiquibaseContainer {
 
     private final String jndiName;
@@ -25,13 +31,15 @@ public class LiquibaseContainer {
 
     public LiquibaseContainer(String jndiName) {
         this.jndiName = jndiName;
+        prepareConfigs();
     }
 
+    /**
+     * Creates Liquibase object based on configuration provided with JNDI name.
+     *
+     * @return Liquibase object
+     */
     public Liquibase createLiquibase() {
-
-        if (dataSourceConfig == null || liquibaseConfig == null) {
-            prepareConfigs();
-        }
 
         try {
             Connection connection = DriverManager.getConnection(
@@ -49,18 +57,13 @@ public class LiquibaseContainer {
         }
     }
 
+    /**
+     * Retrieves and validates Liquibase and data source configurations for provided JNDI name .
+     */
     public void prepareConfigs() {
 
         List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
         List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
-
-        if (liquibaseConfigs.size() == 0) {
-            throw new RuntimeException("No liquibase configurations provided!");
-        }
-
-        if (dataSourceConfigs.size() == 0) {
-            throw new RuntimeException("No datasource configuration provided!");
-        }
 
         if (jndiName == null || jndiName.equals("")) {
 

@@ -9,6 +9,12 @@ import liquibase.Liquibase;
 
 import java.util.List;
 
+/**
+ * Executes Liquibase migrations.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 public class LiquibaseMigrationUtil extends MigrationUtil {
 
     public LiquibaseMigrationUtil() {

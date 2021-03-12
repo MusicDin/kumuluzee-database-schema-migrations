@@ -8,6 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Reads Liquibase configuration from KumuluzEE configuration file.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 public class LiquibaseConfigurationUtil {
 
     private static final String LIQUIBASE_CHANGELOGS_CONFIG_PREFIX = "kumuluzee.migrations.liquibase.changelogs";

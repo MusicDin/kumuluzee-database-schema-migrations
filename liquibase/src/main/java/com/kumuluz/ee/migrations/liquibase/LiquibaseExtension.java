@@ -5,22 +5,24 @@ import com.kumuluz.ee.common.config.EeConfig;
 import com.kumuluz.ee.common.dependencies.EeExtensionDef;
 import com.kumuluz.ee.common.wrapper.KumuluzServerWrapper;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
-import com.kumuluz.ee.migrations.MigrationUtil;
-import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseMigrationUtil;
-import com.kumuluz.ee.migrations.liquibase.utils.ValidationUtil;
 
+/**
+ * KumuluzEE framework extension for Liquibase.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 @EeExtensionDef(name = "Liquibase", group = "migrations")
 public class LiquibaseExtension implements Extension {
 
     @Override
     public void init(KumuluzServerWrapper kumuluzServerWrapper, EeConfig eeConfig) {
-        ValidationUtil.validateConfigurations();
+        // Nothing to be done at initialization
     }
 
     @Override
     public void load() {
-        MigrationUtil migrationUtil = new LiquibaseMigrationUtil();
-        migrationUtil.migrate();
+        // Nothing to be done in load phase
     }
 
     @Override

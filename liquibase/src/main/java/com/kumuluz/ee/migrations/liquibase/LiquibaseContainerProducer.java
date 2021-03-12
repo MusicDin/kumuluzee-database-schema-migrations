@@ -6,6 +6,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
+/**
+ * Liquibase container producer.
+ *
+ * @author Din Music
+ * @since 1.0.0
+ */
 @ApplicationScoped
 public class LiquibaseContainerProducer {
 
