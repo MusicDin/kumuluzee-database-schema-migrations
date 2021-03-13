@@ -51,13 +51,24 @@ public class LiquibaseConfigurationUtil {
             Optional<String> jndiName = config.get(changelogPrefix + ".jndi-name");
 
             if (jndiName.isPresent()) {
+
                 LiquibaseConfig liquibaseConfig = new LiquibaseConfig();
                 liquibaseConfig.setJndiName(jndiName.get());
-                liquibaseConfig.setFile(config.get(changelogPrefix + ".file").orElse(DEFAULT_MASTER_CHANGELOG));
-                liquibaseConfig.setContexts(Arrays.asList(config.get(changelogPrefix + ".contexts").orElse("").split(",").clone()));
-                liquibaseConfig.setLabels(Arrays.asList(config.get(changelogPrefix + ".labels").orElse("").split(",").clone()));
-                liquibaseConfig.setStartupDropAll(config.getBoolean(changelogPrefix + ".startup.drop-all").orElse(false));
-                liquibaseConfig.setStartupUpdate(config.getBoolean(changelogPrefix + ".startup.update").orElse(false));
+                liquibaseConfig.setFile(config.get(changelogPrefix + ".file")
+                        .orElse(DEFAULT_MASTER_CHANGELOG));
+                liquibaseConfig.setContexts(config.get(changelogPrefix + ".contexts")
+                        .map(s -> Arrays.asList(s.split(",")))
+                        .orElse(new ArrayList<>()));
+                liquibaseConfig.setLabels(config.get(changelogPrefix + ".labels")
+                        .map(s -> Arrays.asList(s.split(",")))
+                        .orElse(new ArrayList<>()));
+                liquibaseConfig.setStartupDropAll(config
+                        .getBoolean(changelogPrefix + ".startup.drop-all")
+                        .orElse(false));
+                liquibaseConfig.setStartupUpdate(config
+                        .getBoolean(changelogPrefix + ".startup.update")
+                        .orElse(false));
+
                 liquibaseConfigs.add(liquibaseConfig);
             }
         }

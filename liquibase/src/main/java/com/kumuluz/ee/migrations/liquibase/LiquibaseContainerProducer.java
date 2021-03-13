@@ -7,7 +7,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 /**
- * Liquibase container producer.
+ * {@link LiquibaseContainer} producer.
  *
  * @author Din Music
  * @since 1.0.0

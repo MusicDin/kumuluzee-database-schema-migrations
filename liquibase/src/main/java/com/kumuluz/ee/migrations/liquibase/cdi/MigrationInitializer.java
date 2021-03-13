@@ -19,9 +19,9 @@ public class MigrationInitializer {
     /**
      * Triggers Liquibase migration when application scope is initialized.
      *
-     * @param init - Initialized application scope object
+     * @param init - Initialized application scope object.
      */
-    public void migrate(@Observes @Initialized(ApplicationScoped.class) Object init){
+    public void migrate(@Observes @Initialized(ApplicationScoped.class) Object init) {
         MigrationUtil migrationUtil = new LiquibaseMigrationUtil();
         migrationUtil.migrate();
     }

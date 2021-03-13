@@ -1,0 +1,17 @@
+kumuluzee:
+  name: kumuluzee-samples-migrations-liquibase
+  version: 1.0.0-SNAPSHOT
+  server:
+    show-server-info: true
+  datasources:
+    - jndi-name: jdbc/TestDS
+      connection-url: jdbc:h2:mem:kumuluzee-migrations-liquibase;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: user
+      password: pass
+      pool:
+        max-size: 20
+  migrations:
+    enabled: true
+    liquibase:
+      changelogs:
+        - jndi-name: jdbc/TestDS

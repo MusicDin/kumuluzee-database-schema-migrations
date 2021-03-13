@@ -58,7 +58,7 @@ public class LiquibaseContainer {
     }
 
     /**
-     * Retrieves and validates Liquibase and data source configurations for provided JNDI name .
+     * Retrieves and validates Liquibase and data source configurations for provided JNDI name.
      */
     public void prepareConfigs() {
 
