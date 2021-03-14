@@ -3,11 +3,18 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
 
-    <changeSet author="KumuluzEE" id="create_test_table">
+    <changeSet author="KumuluzEE" id="create_table" context="init">
         <createTable tableName="test">
             <column name="id" type="varchar(128)"/>
             <column name="testField" type="varchar(64)"/>
         </createTable>
+    </changeSet>
+
+    <changeSet id="add_column" author="KumuluzEE" context="error">
+        <insert tableName="test">
+            <column name="id">123</column>
+            <column name="testField">123</column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
