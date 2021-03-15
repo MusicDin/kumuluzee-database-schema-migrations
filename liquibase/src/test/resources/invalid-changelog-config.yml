@@ -8,3 +8,4 @@ kumuluzee:
     liquibase:
       changelogs:
         - jndi-name: jdbc/TestDS
+        - file: invalid-changelog.xml

@@ -12,6 +12,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessInjectionPoint;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -67,7 +68,8 @@ public class LiquibaseCdiExtension implements Extension {
     }
 
     /**
-     * Validates that each Liquibase configuration is referencing a configured data source.
+     * Validates that each Liquibase configuration is referencing a configured data source
+     * and that the provided changelog file exists.
      *
      * @param event - Observed AfterBeanDiscovery event
      */
@@ -86,6 +88,11 @@ public class LiquibaseCdiExtension implements Extension {
             if (dataSourceConfig == null) {
                 event.addDefinitionError(new DeploymentException("Liquibase configuration with jndi name '" + config.getJndiName()
                         + "' does not match any data source's jndi name."));
+            }
+
+            if(!new File(config.getFile()).exists()) {
+                event.addDefinitionError(new DeploymentException("Liquibase changelog file '" + config.getFile()
+                        + "' does not exist."));
             }
         }
     }

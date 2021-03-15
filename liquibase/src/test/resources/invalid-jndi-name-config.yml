@@ -7,4 +7,4 @@ kumuluzee:
     enabled: true
     liquibase:
       changelogs:
-        - jndi-name: jdbc/TestDS
+        - jndi-name: jdbc/NonExistingDS
