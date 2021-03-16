@@ -10,7 +10,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="add_column" author="KumuluzEE" context="error">
+    <changeSet author="KumuluzEE" id="add_column" context="error">
         <insert tableName="test">
             <column name="id">123</column>
             <column name="testField">123</column>

@@ -7,12 +7,11 @@ import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.ShouldThrowException;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import javax.enterprise.inject.spi.DefinitionException;
 
@@ -22,8 +21,7 @@ import javax.enterprise.inject.spi.DefinitionException;
  * @author Din Music
  * @since 1.0.0
  */
-@RunWith(Arquillian.class)
-public class InvalidJndiNameInConfigurationTest {
+public class InvalidJndiNameInConfigurationTest extends Arquillian {
 
     @Deployment
     @ShouldThrowException(DefinitionException.class)

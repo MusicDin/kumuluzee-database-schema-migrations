@@ -1,5 +1,6 @@
 package com.kumuluz.ee.migrations.liquibase;
 
+import com.kumuluz.ee.migrations.liquibase.cdi.LiquibaseCdiExtension;
 import org.jboss.arquillian.container.test.spi.client.deployment.CachedAuxilliaryArchiveAppender;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -18,6 +19,8 @@ public class LiquibaseLibraryAppender extends CachedAuxilliaryArchiveAppender {
 
         return ShrinkWrap.create(JavaArchive.class, "kumuluzee-migrations-liquibase.jar")
                 .addPackages(true, LiquibaseExtension.class.getPackage())
+//                .addAsServiceProvider(com.kumuluz.ee.common.Extension.class, LiquibaseExtension.class)
+//                .addAsServiceProvider(javax.enterprise.inject.spi.Extension.class, LiquibaseCdiExtension.class)
                 .addAsResource("META-INF/beans.xml");
     }
 

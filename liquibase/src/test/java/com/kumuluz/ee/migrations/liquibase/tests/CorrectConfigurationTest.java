@@ -2,13 +2,13 @@ package com.kumuluz.ee.migrations.liquibase.tests;
 
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
+import liquibase.exception.LiquibaseException;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Tests full and correct Liquibase configuration.
@@ -16,8 +16,7 @@ import org.junit.runner.RunWith;
  * @author Din Music
  * @since 1.0.0
  */
-@RunWith(Arquillian.class)
-public class CorrectConfigurationTest {
+public class CorrectConfigurationTest extends Arquillian {
 
     @Deployment
     public static JavaArchive deployment() {
@@ -45,8 +44,8 @@ public class CorrectConfigurationTest {
 
         Assert.assertEquals("jdbc/TestDS", config.getJndiName());
         Assert.assertEquals("db/test-changelog.xml", config.getFile());
-        Assert.assertArrayEquals(contexts, config.getContexts().toArray());
-        Assert.assertArrayEquals(labels, config.getLabels().toArray());
+        Assert.assertEquals(contexts, config.getContexts().toArray());
+        Assert.assertEquals(labels, config.getLabels().toArray());
         Assert.assertTrue(config.isStartupDropAll());
         Assert.assertTrue(config.isStartupUpdate());
     }

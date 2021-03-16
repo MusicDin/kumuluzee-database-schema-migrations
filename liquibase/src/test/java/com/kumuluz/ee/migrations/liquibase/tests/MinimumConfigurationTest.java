@@ -3,12 +3,11 @@ package com.kumuluz.ee.migrations.liquibase.tests;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 /**
@@ -17,8 +16,7 @@ import org.junit.runner.RunWith;
  * @author Din Music
  * @since 1.0.0
  */
-@RunWith(Arquillian.class)
-public class MinimumConfigurationTest {
+public class MinimumConfigurationTest extends Arquillian {
 
     @Deployment
     public static JavaArchive deployment(){
@@ -38,8 +36,8 @@ public class MinimumConfigurationTest {
 
         Assert.assertEquals("jdbc/TestDS", config.getJndiName());
         Assert.assertEquals("db/changelog-master.xml", config.getFile());
-        Assert.assertArrayEquals(emptyArray, config.getContexts().toArray());
-        Assert.assertArrayEquals(emptyArray, config.getLabels().toArray());
+        Assert.assertEquals(emptyArray, config.getContexts().toArray());
+        Assert.assertEquals(emptyArray, config.getLabels().toArray());
         Assert.assertFalse(config.isStartupDropAll());
         Assert.assertFalse(config.isStartupUpdate());
     }

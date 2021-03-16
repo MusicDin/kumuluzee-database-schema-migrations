@@ -28,8 +28,8 @@
 
         <kumuluzee-arquillian-container.version>1.1.1</kumuluzee-arquillian-container.version>
         <arquillian.version>1.6.0.Final</arquillian.version>
-        <junit.version>4.13.2</junit.version>
-<!--        <testng.version>6.9.9</testng.version>-->
+        <testng.version>6.14.3</testng.version>
+        <jcommander.version>1.81</jcommander.version>
         <h2.version>1.4.200</h2.version>
     </properties>
 
@@ -79,17 +79,18 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.testng</groupId>-->
-<!--                <artifactId>testng</artifactId>-->
-<!--                <version>${testng.version}</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
+            <!-- Overrides TestNG's JCommander version-->
+            <dependency>
+                <groupId>com.beust</groupId>
+                <artifactId>jcommander</artifactId>
+                <version>${jcommander.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>

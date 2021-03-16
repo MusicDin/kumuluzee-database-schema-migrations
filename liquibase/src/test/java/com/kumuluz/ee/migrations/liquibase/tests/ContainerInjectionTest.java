@@ -1,21 +1,23 @@
 package com.kumuluz.ee.migrations.liquibase.tests;
 
+import com.beust.jcommander.ParameterException;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
+import com.kumuluz.ee.migrations.liquibase.LiquibaseExtension;
 import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
+import liquibase.CatalogAndSchema;
 import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
@@ -25,8 +27,7 @@ import javax.inject.Inject;
  * @author Din Music
  * @since 1.0.0
  */
-@RunWith(Arquillian.class)
-public class ContainerInjectionTest {
+public class ContainerInjectionTest extends Arquillian {
 
     @Deployment
     public static JavaArchive deployment() {
@@ -88,15 +89,24 @@ public class ContainerInjectionTest {
         liquibase.dropAll();
     }
 
-    @Test(expected = LiquibaseException.class)
+    @Test(expectedExceptions = LiquibaseException.class)
     public void noTableExceptionTest() throws LiquibaseException {
+
+        System.out.println("Executing test...");
 
         Liquibase liquibase = annotatedLiquibaseContainer.createLiquibase();
 
         Assert.assertNotNull(liquibase);
 
-        Contexts initContext = new Contexts("error");
-        liquibase.update(initContext);
+        Contexts errorContext = new Contexts("error");
+        System.out.println("Dropping...");
+        liquibase.dropAll();
+        System.out.println("All dropped.");
+        System.out.println("Updating...");
+        liquibase.update(errorContext);
+        System.out.println("Updated.");
+
+        System.out.println("Test executed");
     }
 
 }
