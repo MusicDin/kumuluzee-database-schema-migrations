@@ -1,4 +1,4 @@
-package com.kumuluz.ee.migrations;
+package com.kumuluz.ee.migrations.common;
 
 /**
  * @author Din Music

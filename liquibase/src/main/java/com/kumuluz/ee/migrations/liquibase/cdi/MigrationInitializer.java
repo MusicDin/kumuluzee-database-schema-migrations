@@ -1,6 +1,6 @@
 package com.kumuluz.ee.migrations.liquibase.cdi;
 
-import com.kumuluz.ee.migrations.MigrationUtil;
+import com.kumuluz.ee.migrations.common.MigrationUtil;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseMigrationUtil;
 
 import javax.enterprise.context.ApplicationScoped;

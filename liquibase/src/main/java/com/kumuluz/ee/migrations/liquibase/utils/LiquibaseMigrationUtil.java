@@ -1,6 +1,6 @@
 package com.kumuluz.ee.migrations.liquibase.utils;
 
-import com.kumuluz.ee.migrations.MigrationUtil;
+import com.kumuluz.ee.migrations.common.MigrationUtil;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import liquibase.Contexts;

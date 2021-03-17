@@ -1,13 +1,10 @@
 package com.kumuluz.ee.migrations.liquibase.tests;
 
-import com.beust.jcommander.ParameterException;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
-import com.kumuluz.ee.migrations.liquibase.LiquibaseExtension;
 import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
-import liquibase.CatalogAndSchema;
 import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
@@ -22,7 +19,7 @@ import org.testng.annotations.Test;
 import javax.inject.Inject;
 
 /**
- * Tests {@link com.kumuluz.ee.migrations.liquibase.LiquibaseContainer} injection.
+ * Tests {@link LiquibaseContainer} injection.
  *
  * @author Din Music
  * @since 1.0.0
@@ -34,15 +31,16 @@ public class ContainerInjectionTest extends Arquillian {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClass(LiquibaseConfigurationUtil.class)
                 .addClass(LiquibaseConfig.class)
-                .addClass(LiquibaseContainer.class)
                 .addClass(LiquibaseContainerProducer.class)
+                .addClass(LiquibaseContainer.class)
                 .addClass(LiquibaseChangelog.class)
                 .addAsResource("correct-config.yml", "config.yml")
-                .addAsResource("test-changelog.xml", "db/test-changelog.xml")
+                .addAsResource("test-changelog.xml", "db/changelog.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
+    @LiquibaseChangelog
     private LiquibaseContainer unannotatedLiquibaseContainer;
 
     @Inject

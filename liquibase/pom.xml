@@ -16,7 +16,7 @@
 
     <properties>
         <liquibase-core.version>4.2.1</liquibase-core.version>
-        <surfire-plugin.version>2.22.1</surfire-plugin.version>
+        <surefire-plugin.version>2.22.1</surefire-plugin.version>
     </properties>
 
     <dependencies>
@@ -82,7 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surfire-plugin.version}</version>
+                <version>${surefire-plugin.version}</version>
                 <configuration>
                     <environmentVariables>
                         <KUMULUZEE_SERVER_HTTP_PORT>54321</KUMULUZEE_SERVER_HTTP_PORT>

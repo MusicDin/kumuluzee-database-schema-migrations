@@ -2,7 +2,6 @@ package com.kumuluz.ee.migrations.liquibase.tests;
 
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
 import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
-import liquibase.exception.LiquibaseException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -23,7 +22,8 @@ public class CorrectConfigurationTest extends Arquillian {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClass(LiquibaseConfigurationUtil.class)
                 .addClass(LiquibaseConfig.class)
-                .addAsResource("correct-config.yml", "config.yml");
+                .addAsResource("correct-config.yml", "config.yml")
+                .addAsResource("test-changelog.xml", "db/changelog.xml");
     }
 
     private static final String[] contexts = {
@@ -43,7 +43,7 @@ public class CorrectConfigurationTest extends Arquillian {
         LiquibaseConfig config = configurationUtil.getLiquibaseConfigs().get(0);
 
         Assert.assertEquals("jdbc/TestDS", config.getJndiName());
-        Assert.assertEquals("db/test-changelog.xml", config.getFile());
+        Assert.assertEquals("db/changelog.xml", config.getFile());
         Assert.assertEquals(contexts, config.getContexts().toArray());
         Assert.assertEquals(labels, config.getLabels().toArray());
         Assert.assertTrue(config.isStartupDropAll());

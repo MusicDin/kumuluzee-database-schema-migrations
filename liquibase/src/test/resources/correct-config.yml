@@ -8,7 +8,7 @@ kumuluzee:
     liquibase:
       changelogs:
         - jndi-name: jdbc/TestDS
-          file: db/test-changelog.xml
+          file: db/changelog.xml
           contexts: "context1,context2"
           labels: "label1 and label2,label3"
           startup:
