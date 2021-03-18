@@ -1,8 +1,5 @@
 package com.kumuluz.ee.migrations.liquibase.tests;
 
-import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
-import com.kumuluz.ee.migrations.liquibase.tests.beans.AnnotatedLiquibaseContainer;
-import com.kumuluz.ee.migrations.liquibase.tests.beans.EmptyAnnotatedLiquibaseContainer;
 import com.kumuluz.ee.migrations.liquibase.tests.beans.UnannotatedLiquibaseContainer;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -23,12 +20,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Tests {@link LiquibaseContainer} injection.
+ * Tests Liquibase contexts and labels.
  *
  * @author Din Music
  * @since 1.0.0
  */
-public class ContainerInjectionTest extends Arquillian {
+public class ContextsAndLabelsTest extends Arquillian {
 
     public static final String SELECT_ALL = "SELECT * FROM TEST_TABLE";
 
@@ -36,75 +33,43 @@ public class ContainerInjectionTest extends Arquillian {
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClass(UnannotatedLiquibaseContainer.class)
-                .addClass(EmptyAnnotatedLiquibaseContainer.class)
-                .addClass(AnnotatedLiquibaseContainer.class)
                 .addAsResource("correct-config.yml", "config.yml")
                 .addAsResource("test-changelog.xml", "db/changelog.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
-    public void unannotatedContainerNoExceptionTest() throws LiquibaseException, SQLException {
+    public void contextsAndLabelsTest() throws LiquibaseException, SQLException {
 
         UnannotatedLiquibaseContainer liquibaseContainer = CDI.current().select(UnannotatedLiquibaseContainer.class).get();
         Liquibase liquibase = liquibaseContainer.getLiquibase();
-
-        testMigrationInRuntime(liquibase);
-    }
-
-    @Test
-    public void annotatedContainerWithNoParameterNoExceptionTest() throws LiquibaseException, SQLException {
-
-        EmptyAnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(EmptyAnnotatedLiquibaseContainer.class).get();
-        Liquibase liquibase = liquibaseContainer.getLiquibase();
-
-        testMigrationInRuntime(liquibase);
-    }
-
-    @Test
-    public void annotatedContainerNoExceptionTest() throws LiquibaseException, SQLException {
-
-        AnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(AnnotatedLiquibaseContainer.class).get();
-        Liquibase liquibase = liquibaseContainer.getLiquibase();
-
-        testMigrationInRuntime(liquibase);
-    }
-
-    @Test(expectedExceptions = LiquibaseException.class)
-    public void noTableExceptionTest() throws LiquibaseException {
-
-        AnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(AnnotatedLiquibaseContainer.class).get();
-        Liquibase liquibase = liquibaseContainer.getLiquibase();
-
-        Assert.assertNotNull(liquibase);
-
-        liquibase.dropAll();
-
-        liquibase.update(new Contexts("insert_sample_row"));
-    }
-
-    private void testMigrationInRuntime(Liquibase liquibase) throws SQLException, LiquibaseException {
-
-        Assert.assertNotNull(liquibase);
-
 
         Statement stmt = DriverManager
                 .getConnection(liquibase.getDatabase().getConnection().getURL())
                 .createStatement();
 
         // Migrates schema only - There should be no rows inserted
-        liquibase.update(new Contexts(), new LabelExpression("v1.0"));
+        liquibase.update("init");
 
         ResultSet rs = stmt.executeQuery(SELECT_ALL);
+        Assert.assertFalse(rs.next());
+
+        // Insert sample row - There should be one row
+        liquibase.update(new Contexts("insert_sample_row"));
+
+        rs = stmt.executeQuery(SELECT_ALL);
         while (rs.next()) {
             Assert.assertEquals("123456789", rs.getString(1));
             Assert.assertEquals("This is test field.", rs.getString(2));
         }
 
+        liquibase.update(new Contexts(), new LabelExpression("v1.1 and !drop_table"));
+
+        rs = stmt.executeQuery(SELECT_ALL);
+        Assert.assertFalse(rs.next());
+
         liquibase.dropAll();
 
         Assert.assertThrows(org.h2.jdbc.JdbcSQLSyntaxErrorException.class, () -> stmt.executeQuery(SELECT_ALL));
-
     }
-
 }
