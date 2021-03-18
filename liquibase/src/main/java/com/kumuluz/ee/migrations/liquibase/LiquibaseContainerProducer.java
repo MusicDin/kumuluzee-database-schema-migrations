@@ -24,7 +24,7 @@ public class LiquibaseContainerProducer {
             jndiName = injectionPoint.getAnnotated().getAnnotation(LiquibaseChangelog.class).jndiName();
         }
 
-        return new LiquibaseContainer(jndiName);
+        return new LiquibaseContainerFactory(jndiName).createLiquibaseContainer();
     }
 
 }

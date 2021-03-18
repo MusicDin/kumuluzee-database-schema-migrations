@@ -85,7 +85,7 @@
                 <version>${surefire-plugin.version}</version>
                 <configuration>
                     <environmentVariables>
-                        <KUMULUZEE_SERVER_HTTP_PORT>54321</KUMULUZEE_SERVER_HTTP_PORT>
+                        <KUMULUZEE_SERVER_HTTP_PORT>18080</KUMULUZEE_SERVER_HTTP_PORT>
                     </environmentVariables>
                 </configuration>
             </plugin>

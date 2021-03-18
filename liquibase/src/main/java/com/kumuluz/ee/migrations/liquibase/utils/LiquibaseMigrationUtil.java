@@ -2,7 +2,9 @@ package com.kumuluz.ee.migrations.liquibase.utils;
 
 import com.kumuluz.ee.migrations.common.MigrationUtil;
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
+import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerFactory;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
+import com.kumuluz.ee.migrations.liquibase.exceptions.LiquibaseMigrationException;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -28,7 +30,7 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
 
         for (LiquibaseConfig liquibaseConfig : liquibaseConfigs) {
 
-            LiquibaseContainer liquibaseContainer = new LiquibaseContainer(liquibaseConfig.getJndiName());
+            LiquibaseContainer liquibaseContainer = new LiquibaseContainerFactory(liquibaseConfig.getJndiName()).createLiquibaseContainer();
             Liquibase liquibase = liquibaseContainer.createLiquibase();
 
             try {
@@ -50,7 +52,7 @@ public class LiquibaseMigrationUtil extends MigrationUtil {
                 liquibase.close();
 
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new LiquibaseMigrationException(e);
             }
         }
 

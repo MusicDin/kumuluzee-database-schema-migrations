@@ -1,9 +1,9 @@
 package com.kumuluz.ee.migrations.liquibase;
 
 import com.kumuluz.ee.common.config.DataSourceConfig;
-import com.kumuluz.ee.common.config.EeConfig;
 import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
-import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -15,7 +15,6 @@ import liquibase.resource.ResourceAccessor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Liquibase container initializes Liquibase object based on provided JNDI name.
@@ -25,19 +24,18 @@ import java.util.List;
  */
 public class LiquibaseContainer {
 
-    private final String jndiName;
-    private DataSourceConfig dataSourceConfig;
-    private LiquibaseConfig liquibaseConfig;
+    private final LiquibaseConfig liquibaseConfig;
+    private final DataSourceConfig dataSourceConfig;
 
-    public LiquibaseContainer(String jndiName) {
-        this.jndiName = jndiName;
-        prepareConfigs();
+    public LiquibaseContainer(LiquibaseConfig liquibaseConfig, DataSourceConfig dataSourceConfig) {
+        this.liquibaseConfig = liquibaseConfig;
+        this.dataSourceConfig = dataSourceConfig;
     }
 
     /**
      * Creates Liquibase object based on configuration provided with JNDI name.
      *
-     * @return Liquibase object
+     * @return Returns Liquibase object.
      */
     public Liquibase createLiquibase() {
 
@@ -57,42 +55,20 @@ public class LiquibaseContainer {
         }
     }
 
-    /**
-     * Retrieves and validates Liquibase and data source configurations for provided JNDI name.
-     */
-    public void prepareConfigs() {
+    public LiquibaseConfig getLiquibaseConfig() {
+        return liquibaseConfig;
+    }
 
-        List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
-        List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();
+    public Contexts getContexts() {
+        return new Contexts(liquibaseConfig.getContexts());
+    }
 
-        if (jndiName == null || jndiName.equals("")) {
+    public LabelExpression getLabels() {
+        return new LabelExpression(liquibaseConfig.getLabels());
+    }
 
-            // If jndiName is not defined and only 1 liquibase configuration is provided,
-            // return LiquibaseContainer for that configuration
-
-            if (liquibaseConfigs.size() == 1) {
-                liquibaseConfig = liquibaseConfigs.get(0);
-            } else {
-                throw new RuntimeException("There is more than 1 liquibase configuration provided." +
-                        " Please provide 'jndiName' of liquibase datasource trough '@LiquibaseChangelog' annotation.");
-            }
-
-        } else {
-
-            liquibaseConfig = liquibaseConfigs
-                    .stream()
-                    .filter(config -> config.getJndiName().equals(jndiName))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '"
-                            + jndiName + "' not found"));
-        }
-
-        dataSourceConfig = dataSourceConfigs
-                .stream()
-                .filter(ds -> ds.getJndiName().equals(liquibaseConfig.getJndiName()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Liquibase configuration with jndi name '"
-                        + liquibaseConfig.getJndiName() + "' does not match any data source's jndi name."));
+    public String getDataSourceJndiName() {
+        return dataSourceConfig.getJndiName();
     }
 
 }
