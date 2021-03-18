@@ -18,9 +18,9 @@ public class LiquibaseLibraryAppender extends CachedAuxilliaryArchiveAppender {
     protected Archive<?> buildArchive() {
 
         return ShrinkWrap.create(JavaArchive.class, "kumuluzee-migrations-liquibase.jar")
-                .addClass(LiquibaseExtension.class)
-//                .addPackages(true, "com.kumuluz.ee.migrations.liquibase")
-//                .addPackages(true, "com.kumuluz.ee.migrations.common")
+                .addPackages(true, "com.kumuluz.ee.migrations.common")
+                .addPackages(true, "com.kumuluz.ee.migrations.liquibase")
+                .deletePackages(true, "com.kumuluz.ee.migrations.liquibase.tests")
                 .addAsServiceProvider(com.kumuluz.ee.common.Extension.class, LiquibaseExtension.class)
                 .addAsServiceProvider(javax.enterprise.inject.spi.Extension.class, LiquibaseCdiExtension.class)
                 .addAsResource("META-INF/beans.xml");

@@ -21,8 +21,6 @@ public class MinimumConfigurationTest extends Arquillian {
     @Deployment
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addClass(LiquibaseConfigurationUtil.class)
-                .addClass(LiquibaseConfig.class)
                 .addAsResource("minimum-config.yml", "config.yml")
                 .addAsResource("test-changelog.xml", "db/changelog-master.xml");
     }

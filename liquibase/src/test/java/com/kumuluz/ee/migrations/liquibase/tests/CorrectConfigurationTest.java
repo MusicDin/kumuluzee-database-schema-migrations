@@ -20,8 +20,6 @@ public class CorrectConfigurationTest extends Arquillian {
     @Deployment
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addClass(LiquibaseConfigurationUtil.class)
-                .addClass(LiquibaseConfig.class)
                 .addAsResource("correct-config.yml", "config.yml")
                 .addAsResource("test-changelog.xml", "db/changelog.xml");
     }

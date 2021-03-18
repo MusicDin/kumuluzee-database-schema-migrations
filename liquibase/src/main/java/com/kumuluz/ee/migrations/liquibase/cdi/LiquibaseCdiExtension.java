@@ -13,7 +13,6 @@ import javax.enterprise.inject.spi.DeploymentException;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessInjectionPoint;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Validates injection points and Liquibase configuration.
@@ -74,8 +73,6 @@ public class LiquibaseCdiExtension implements Extension {
      * @param event - Observed AfterBeanDiscovery event
      */
     public void validateConfigurations(@Observes AfterBeanDiscovery event) {
-
-        Logger.getLogger("").info("Validate configuration. Test123");
 
         List<DataSourceConfig> dataSourceConfigs = EeConfig.getInstance().getDatasources();
         List<LiquibaseConfig> liquibaseConfigs = LiquibaseConfigurationUtil.getInstance().getLiquibaseConfigs();

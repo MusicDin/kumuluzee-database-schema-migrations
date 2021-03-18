@@ -1,10 +1,5 @@
 package com.kumuluz.ee.migrations.liquibase.tests;
 
-import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
-import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
-import com.kumuluz.ee.migrations.liquibase.cdi.LiquibaseCdiExtension;
-import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
-import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.ShouldThrowException;
 import org.jboss.arquillian.testng.Arquillian;
@@ -28,16 +23,11 @@ public class InvalidJndiNameTest extends Arquillian {
     @ShouldThrowException(value = DefinitionException.class, testable = true)
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addClass(LiquibaseCdiExtension.class)
-                .addClass(LiquibaseContainerProducer.class)
-                .addClass(LiquibaseConfigurationUtil.class)
-                .addClass(LiquibaseConfig.class)
-                .addClass(LiquibaseChangelog.class)
                 .addAsResource("invalid-jndi-name-config.yml", "config.yml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    public void invalidJndiNameTest() {
+    public void ignored() {
         // See @ShouldThrowException in deployment
     }
 

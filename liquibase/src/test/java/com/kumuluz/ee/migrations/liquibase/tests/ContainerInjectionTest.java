@@ -1,10 +1,9 @@
 package com.kumuluz.ee.migrations.liquibase.tests;
 
 import com.kumuluz.ee.migrations.liquibase.LiquibaseContainer;
-import com.kumuluz.ee.migrations.liquibase.LiquibaseContainerProducer;
-import com.kumuluz.ee.migrations.liquibase.annotations.LiquibaseChangelog;
-import com.kumuluz.ee.migrations.liquibase.configurations.LiquibaseConfig;
-import com.kumuluz.ee.migrations.liquibase.utils.LiquibaseConfigurationUtil;
+import com.kumuluz.ee.migrations.liquibase.tests.beans.AnnotatedLiquibaseContainer;
+import com.kumuluz.ee.migrations.liquibase.tests.beans.EmptyAnnotatedLiquibaseContainer;
+import com.kumuluz.ee.migrations.liquibase.tests.beans.UnannotatedLiquibaseContainer;
 import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
@@ -16,7 +15,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.CDI;
 
 /**
  * Tests {@link LiquibaseContainer} injection.
@@ -29,32 +28,19 @@ public class ContainerInjectionTest extends Arquillian {
     @Deployment
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
-                .addClass(LiquibaseConfigurationUtil.class)
-                .addClass(LiquibaseConfig.class)
-                .addClass(LiquibaseContainerProducer.class)
-                .addClass(LiquibaseContainer.class)
-                .addClass(LiquibaseChangelog.class)
+                .addClass(UnannotatedLiquibaseContainer.class)
+                .addClass(EmptyAnnotatedLiquibaseContainer.class)
+                .addClass(AnnotatedLiquibaseContainer.class)
                 .addAsResource("correct-config.yml", "config.yml")
                 .addAsResource("test-changelog.xml", "db/changelog.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    @Inject
-    @LiquibaseChangelog
-    private LiquibaseContainer unannotatedLiquibaseContainer;
-
-    @Inject
-    @LiquibaseChangelog
-    private LiquibaseContainer annotatedLiquibaseContainerWithNoParameter;
-
-    @Inject
-    @LiquibaseChangelog(jndiName = "jdbc/TestDS")
-    private LiquibaseContainer annotatedLiquibaseContainer;
-
     @Test
     public void unannotatedContainerNoExceptionTest() throws LiquibaseException {
 
-        Liquibase liquibase = unannotatedLiquibaseContainer.createLiquibase();
+        UnannotatedLiquibaseContainer bean = CDI.current().select(UnannotatedLiquibaseContainer.class).get();
+        Liquibase liquibase = bean.getLiquibase();
 
         Assert.assertNotNull(liquibase);
 
@@ -66,7 +52,8 @@ public class ContainerInjectionTest extends Arquillian {
     @Test
     public void annotatedContainerWithNoParameterNoExceptionTest() throws LiquibaseException {
 
-        Liquibase liquibase = annotatedLiquibaseContainerWithNoParameter.createLiquibase();
+        EmptyAnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(EmptyAnnotatedLiquibaseContainer.class).get();
+        Liquibase liquibase = liquibaseContainer.getLiquibase();
 
         Assert.assertNotNull(liquibase);
 
@@ -78,7 +65,8 @@ public class ContainerInjectionTest extends Arquillian {
     @Test
     public void annotatedContainerNoExceptionTest() throws LiquibaseException {
 
-        Liquibase liquibase = annotatedLiquibaseContainer.createLiquibase();
+        AnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(AnnotatedLiquibaseContainer.class).get();
+        Liquibase liquibase = liquibaseContainer.getLiquibase();
 
         Assert.assertNotNull(liquibase);
 
@@ -92,7 +80,8 @@ public class ContainerInjectionTest extends Arquillian {
 
         System.out.println("Executing test...");
 
-        Liquibase liquibase = annotatedLiquibaseContainer.createLiquibase();
+        AnnotatedLiquibaseContainer liquibaseContainer = CDI.current().select(AnnotatedLiquibaseContainer.class).get();
+        Liquibase liquibase = liquibaseContainer.getLiquibase();
 
         Assert.assertNotNull(liquibase);
 
