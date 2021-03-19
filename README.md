@@ -45,7 +45,7 @@ kumuluzee:
   migrations:
     liquibase:
       changelogs:
-        - jndi-name: jdbc/example-db    # Required
+        - jndi-name: jdbc/example-db             # Required
 ```
 
 In order to provide custom changelog file's location, `file` property can be used (default value is
@@ -58,7 +58,7 @@ kumuluzee:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db
-          file: db/changelog-master.xml       # default: "db/changelog-master.xml"
+          file: db/changelog-master.xml          # default: "db/changelog-master.xml"
 ```
 
 #### Configuring migrations at startup
@@ -75,8 +75,8 @@ kumuluzee:
       changelogs:
         - jndi-name: jdbc/example-db
           startup:
-            drop-all: false                   # default: false  
-            update: true                      # default: false
+            drop-all: false                      # default: false  
+            update: true                         # default: false
 ```
 
 #### Disabling migrations
@@ -85,7 +85,7 @@ In order to disable application startup migrations, set `kumuluzee.migrations.en
 ```yaml
 kumuluzee:
   migrations:
-    enabled: false  # default: true
+    enabled: false                               # default: true
 ```
 
 #### Contexts and labels
@@ -104,8 +104,8 @@ kumuluzee:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db
-          labels: "label1 and !label2, label3"     # default: ""
-          contexts: "context1, context2"          # default: ""
+          labels: "label1 and !label2, label3"   # default: ""
+          contexts: "context1, context2"         # default: ""
 ```
 
 Note that if contexts are not specified they will be ignored by Liquibase. Same applies for labels.
