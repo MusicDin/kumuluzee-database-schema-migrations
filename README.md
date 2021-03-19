@@ -3,7 +3,7 @@
 > KumuluzEE Migrations project for database schema migrations using Liquibase.
 
 KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework provides a simple way to migrate
-database schemas using [Liquibase](https://docs.liquibase.com). It supports migrations at application startup or
+database schemas using [Liquibase](https://www.liquibase.com/). It supports migrations at application startup or
 in runtime when application is already running.
 
 ## Usage
