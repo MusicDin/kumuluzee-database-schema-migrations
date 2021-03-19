@@ -2,9 +2,9 @@
 
 > KumuluzEE Migrations project for database schema migrations using Liquibase.
 
-KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework provides a simple way to migrate
+KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework, that provides a simple way to migrate
 database schemas using [Liquibase](https://www.liquibase.com/). It supports migrations at application startup or
-in runtime when application is already running.
+in runtime, when application is already running.
 
 ## Usage
 
@@ -36,7 +36,7 @@ and [KumuluzEE Config](https://github.com/kumuluz/kumuluzee-config).
 
 In order to be able to use Liquibase migrations, **at least one datasource** needs to be configured.
 
-Only required Liquibase configuration property is `jndi-name` which has to match a JNDI name of the preconfigured
+The only required Liquibase configuration property is `jndi-name` which has to match a JNDI name of the preconfigured
 datasource.
 
 Minimum Liquibase migration configuration (excluding datasource configuration):
@@ -49,7 +49,7 @@ kumuluzee:
 ```
 
 In order to provide custom changelog file's location, `file` property can be used (default value is
-`db/changelog-master.xml`). Location needs to be a relative to the `resource` directory.
+`db/changelog-master.xml`). Location needs to be relative to the `resource` directory.
 
 Sample configuration:
 ```yaml
@@ -63,7 +63,7 @@ kumuluzee:
 
 #### Configuring migrations at startup
 
-There are two actions that can be executed at application startup. One being `dropAll` and another one being `update`.
+There are two actions that can be executed at application startup. One being `dropAll` and the other one being `update`.
 Action `dropAll` will drop the database and action `update` will update the database according to the changelog
 on location provided in `file` property. Note that action `dropAll` will be executed before `update` if both are enabled.
 
