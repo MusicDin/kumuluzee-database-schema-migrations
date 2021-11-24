@@ -1,10 +1,10 @@
 # KumuluzEE Migrations
 
-> KumuluzEE Migrations project for database schema migrations using Liquibase.
+> KumuluzEE Migrations project for database schema migrations with Liquibase.
 
-KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework, that provides a simple way to migrate
-database schemas using [Liquibase](https://www.liquibase.com/). It supports migrations at application startup or
-in runtime, when application is already running.
+KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework that provides an easy way to migrate
+database schemas with [Liquibase](https://www.liquibase.com/). It supports migrations at application startup or
+at runtime when the application is already running.
 
 ## Usage
 
@@ -17,8 +17,8 @@ You can enable KumuluzEE Migrations with Liquibase by adding the following depen
 </dependency>
 ```
 
-This extension also requires **at least one data source** to be configured.
-For example PostgreSQL can be used by adding the following dependency:
+**At least one data source** must be configured for the extension to work.
+For example, PostgreSQL can be used by adding the following dependency:
 ```xml
 <dependency>
     <groupId>org.postgresql</groupId>
@@ -27,19 +27,19 @@ For example PostgreSQL can be used by adding the following dependency:
 </dependency>
 ```
 
-### Configuring migrations
+### Configure migrations
 
-Liquibase migrations are configured with the common KumuluzEE configuration framework.
-Configuration properties can be defined with the environment variables or with the configuration file.
-For more details see the [KumuluzEE configuration wiki page](https://github.com/kumuluz/kumuluzee/wiki/Configuration)
+Liquibase migrations are configured using the common KumuluzEE configuration framework.
+The configuration properties can be defined via the environment variables or via the configuration file.
+For more details, see the [KumuluzEE configuration wiki page](https://github.com/kumuluz/kumuluzee/wiki/Configuration)
 and [KumuluzEE Config](https://github.com/kumuluz/kumuluzee-config).
 
-In order to be able to use Liquibase migrations, **at least one datasource** needs to be configured.
+To use Liquibase migrations, **at least one data source** must be configured.
 
-The only required Liquibase configuration property is `jndi-name` which has to match a JNDI name of the preconfigured
-datasource.
+The only required Liquibase configuration property is `jndi-name`, which must correspond to a JNDI name of the 
+preconfigured data source.
 
-Minimum Liquibase migration configuration (excluding datasource configuration):
+Minimum configuration for Liquibase migration (without data source configuration):
 ```yaml
 kumuluzee:
   migrations:
@@ -48,10 +48,10 @@ kumuluzee:
         - jndi-name: jdbc/example-db             # Required
 ```
 
-In order to provide custom changelog file's location, `file` property can be used (default value is
-`db/changelog-master.xml`). Location needs to be relative to the `resource` directory.
+To specify the location of a custom changelog file, the `file` property can be used (default is
+`db/changelog-master.xml`). The location must be specified relative to the `resource` directory.
 
-Sample configuration:
+Example configuration:
 ```yaml
 kumuluzee:
   migrations:
@@ -61,11 +61,13 @@ kumuluzee:
           file: db/changelog-master.xml          # default: "db/changelog-master.xml"
 ```
 
-#### Configuring migrations at startup
+#### Configure migrations at startup
 
-There are two actions that can be executed at application startup. One being `dropAll` and the other one being `update`.
-Action `dropAll` will drop the database and action `update` will update the database according to the changelog
-on location provided in `file` property. Note that action `dropAll` will be executed before `update` if both are enabled.
+There are two actions that can be performed when the application starts. 
+One is `dropAll` and the other is `update`.
+The `dropAll` action drops the database and the `update` action updates the database according to the changelog
+at the location specified in the `file` property. Note that the `dropAll` action is executed before the `update` 
+action if both are enabled.
 
 Example configuration:
 ```yaml
@@ -79,9 +81,9 @@ kumuluzee:
             update: true                         # default: false
 ```
 
-#### Disabling migrations
+#### Disable migrations
 
-In order to disable application startup migrations, set `kumuluzee.migrations.enabled` to false (default is true).
+To disable migrations at application startup, set `kumuluzee.migrations.enabled` to false (default is `true`).
 ```yaml
 kumuluzee:
   migrations:
@@ -90,12 +92,11 @@ kumuluzee:
 
 #### Contexts and labels
 
-Trough contexts and labels Liquibase provides a way to selectively execute changeSets.
-Contexts allow selecting certain changeSets to be executed, while labels provide a way of
-selecting changeSets to be executed with complex expressions
-(note that *comma* (",") in labels means the same as operator *or*).
+With contexts and labels, Liquibase provides a way to selectively execute *changeSets*.
+Contexts allow you to select specific *changeSets* for execution, while labels allow you to select *changeSets* 
+for execution using complex expressions (note that the comma (`,`) in labels means the same as the `or` operator).
 
-Both contexts and labels can be configured in KumuluzEE configuration file.
+Both contexts and labels can be configured in the KumuluzEE configuration file.
 
 Example configuration:
 ```yaml
@@ -108,37 +109,37 @@ kumuluzee:
           contexts: "context1, context2"         # default: ""
 ```
 
-Note that if contexts are not specified they will be ignored by Liquibase. Same applies for labels.
+Note that contexts that are not specified are ignored by Liquibase. The same is true for labels.
 
-### Migrations using CDI
+### Migrations via CDI
 
-KumuluzEE migrations provide LiquibaseContainer, a wrapper for Liquibase object, which can be injected using CDI.
-Liquibase object provides a way to execute schema migrations over connected data source in runtime.
+KumuluzEE migrations provide LiquibaseContainer, a wrapper for the Liquibase object, that can be injected via CDI.
+The Liquibase object provides a way to perform schema migrations on the connected data source at runtime.
 
-LiquibaseContainer is created by firstly selecting appropriate configuration based on provided JNDI name in
-@LiquibaseChangelog annotation and then connecting it to matching data source.
-Annotation can also be omitted if only one Liquibase migration is specified in KumuluzEE configuration file.
+The LiquibaseContainer is created by first selecting an appropriate configuration based on the JNDI name specified
+in the @LiquibaseChangelog annotation, and then connecting it to the appropriate data source.
+The annotation can also be omitted if only one Liquibase migration is specified in the KumuluzEE configuration file.
 
 Example:
 ```java
 /*
- * Injects LiquibaseContainer if only 1 liquibase 
- * configuration is provided in config file.
+ * Injects LiquibaseContainer if only 1 Liquibase 
+ * configuration is specified in the config file.
  */
 @Inject
 private LiquibaseContainer liquibaseContainer;
 
 /* 
- * Injects LiquibaseContainer if only 1 liquibase 
- * configuration is provided in config file.
+ * Injects LiquibaseContainer if only 1 Liquibase 
+ * configuration is specified in the config file.
  */
 @Inject
 @LiquibaseChangelog
 private LiquibaseContainer liquibaseContainer2;
 
 /* 
- * Injects LiquibaseContainer for changelog with JNDI
- * name provided in annotation's argument.
+ * Injects LiquibaseContainer for changelog with the JNDI
+ * name specified in the argument of the annotation.
  */
 @Inject
 @LiquibaseChangelog(jndiName = "jdbc/example-db")
