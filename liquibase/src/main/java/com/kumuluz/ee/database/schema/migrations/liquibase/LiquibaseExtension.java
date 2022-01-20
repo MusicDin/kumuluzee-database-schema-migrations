@@ -47,7 +47,10 @@ public class LiquibaseExtension implements Extension {
 
     @Override
     public boolean isEnabled() {
-        return ConfigurationUtil.getInstance().getBoolean("kumuluzee.migrations.enabled").orElse(true);
+        return ConfigurationUtil
+                .getInstance()
+                .getBoolean("kumuluzee.database-schema-migrations.enabled")
+                .orElse(true);
     }
 
 }

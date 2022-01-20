@@ -11,7 +11,6 @@ migrations at application startup or at runtime when the application is already 
 You can enable KumuluzEE database schema migrations with Liquibase by adding the following dependency:
 
 ```xml
-
 <dependency>
     <groupId>com.kumuluz.ee.database-schema-migrations</groupId>
     <artifactId>kumuluzee-database-schema-migrations-liquibase</artifactId>
