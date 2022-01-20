@@ -1,19 +1,21 @@
-# KumuluzEE Migrations
+# KumuluzEE Database Schema Migrations
 
-> KumuluzEE Migrations project for database schema migrations with Liquibase.
+> KumuluzEE Database Schema Migrations project for database schema migrations with Liquibase.
 
-KumuluzEE Migrations is a migration project for the KumuluzEE microservice framework that provides an easy way to migrate
-database schemas with [Liquibase](https://www.liquibase.com/). It supports migrations at application startup or
-at runtime when the application is already running.
+KumuluzEE Database Schema Migrations is a database schema migration project for the KumuluzEE microservice framework 
+that provides an easy way to migrate database schemas with [Liquibase](https://www.liquibase.com/). It supports 
+migrations at application startup or at runtime when the application is already running.
 
 ## Usage
 
-You can enable KumuluzEE Migrations with Liquibase by adding the following dependency:
+You can enable KumuluzEE database schema migrations with Liquibase by adding the following dependency:
+
 ```xml
+
 <dependency>
-    <groupId>com.kumuluz.ee.migrations</groupId>
-    <artifactId>kumuluzee-migrations-liquibase</artifactId>
-    <version>${kumuluzee-migrations.version}</version>
+    <groupId>com.kumuluz.ee.database-schema-migrations</groupId>
+    <artifactId>kumuluzee-database-schema-migrations-liquibase</artifactId>
+    <version>${kumuluzee-database-schema-migrations.version}</version>
 </dependency>
 ```
 
@@ -29,20 +31,20 @@ For example, PostgreSQL can be used by adding the following dependency:
 
 ### Configure migrations
 
-Liquibase migrations are configured using the common KumuluzEE configuration framework.
+Liquibase database schema migrations are configured using the common KumuluzEE configuration framework.
 The configuration properties can be defined via the environment variables or via the configuration file.
 For more details, see the [KumuluzEE configuration wiki page](https://github.com/kumuluz/kumuluzee/wiki/Configuration)
 and [KumuluzEE Config](https://github.com/kumuluz/kumuluzee-config).
 
-To use Liquibase migrations, **at least one data source** must be configured.
+To use Liquibase database schema migrations, **at least one data source** must be configured.
 
 The only required Liquibase configuration property is `jndi-name`, which must correspond to a JNDI name of the 
 preconfigured data source.
 
-Minimum configuration for Liquibase migration (without data source configuration):
+Minimum configuration for Liquibase database schema migration (without data source configuration):
 ```yaml
 kumuluzee:
-  migrations:
+  database-schema-migrations:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db             # Required
@@ -54,7 +56,7 @@ To specify the location of a custom changelog file, the `file` property can be u
 Example configuration:
 ```yaml
 kumuluzee:
-  migrations:
+  database-schema-migrations:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db
@@ -72,7 +74,7 @@ action if both are enabled.
 Example configuration:
 ```yaml
 kumuluzee:
-  migrations:
+  database-schema-migrations:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db
@@ -83,10 +85,11 @@ kumuluzee:
 
 #### Disable migrations
 
-To disable migrations at application startup, set `kumuluzee.migrations.enabled` to false (default is `true`).
+To disable database schema migrations at application startup, set `kumuluzee.database-schema-migrations.enabled` 
+to false (default is `true`).
 ```yaml
 kumuluzee:
-  migrations:
+  database-schema-migrations:
     enabled: false                               # default: true
 ```
 
@@ -101,7 +104,7 @@ Both contexts and labels can be configured in the KumuluzEE configuration file.
 Example configuration:
 ```yaml
 kumuluzee:
-  migrations:
+  database-schema-migrations:
     liquibase:
       changelogs:
         - jndi-name: jdbc/example-db
@@ -111,10 +114,11 @@ kumuluzee:
 
 Note that contexts that are not specified are ignored by Liquibase. The same is true for labels.
 
-### Migrations via CDI
+### Database Schema Migrations via CDI
 
-KumuluzEE migrations provide LiquibaseContainer, a wrapper for the Liquibase object, that can be injected via CDI.
-The Liquibase object provides a way to perform schema migrations on the connected data source at runtime.
+KumuluzEE database schema migrations provide LiquibaseContainer, a wrapper for the Liquibase object, that can be 
+injected via CDI. The Liquibase object provides a way to perform schema migrations on the connected data source 
+at runtime.
 
 The LiquibaseContainer is created by first selecting an appropriate configuration based on the JNDI name specified
 in the @LiquibaseChangelog annotation, and then connecting it to the appropriate data source.

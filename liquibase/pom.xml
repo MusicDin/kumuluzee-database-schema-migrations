@@ -3,16 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kumuluzee-migrations</artifactId>
-        <groupId>com.kumuluz.ee.migrations</groupId>
+        <artifactId>kumuluzee-database-schema-migrations</artifactId>
+        <groupId>com.kumuluz.ee.database-schema-migrations</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>KumuluzEE Migrations Liquibase</name>
-    <description>KumuluzEE Migrations extension with Liquibase</description>
+    <name>KumuluzEE Database Schema Migrations Liquibase</name>
+    <description>KumuluzEE Database Schema Migrations extension with Liquibase</description>
 
-    <artifactId>kumuluzee-migrations-liquibase</artifactId>
+    <artifactId>kumuluzee-database-schema-migrations-liquibase</artifactId>
 
     <properties>
         <liquibase-core.version>4.7.0</liquibase-core.version>
@@ -33,8 +33,8 @@
             <artifactId>kumuluzee-cdi-weld</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.kumuluz.ee.migrations</groupId>
-            <artifactId>kumuluzee-migrations-common</artifactId>
+            <groupId>com.kumuluz.ee.database-schema-migrations</groupId>
+            <artifactId>kumuluzee-database-schema-migrations-common</artifactId>
         </dependency>
 
         <dependency>
